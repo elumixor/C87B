@@ -1,0 +1,14 @@
+{
+    "name": "Meta",
+    "references": [
+        "GUID:b9e57dfec39ee474f88636ac3f71f06d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

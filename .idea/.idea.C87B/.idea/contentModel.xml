@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p=".git/info/exclude" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Character" t="Include">
+          <e p="Ability" t="Include">
+            <e p="Ability.cs" t="Include" />
+            <e p="Effects" t="Include">
+              <e p="EffectExtensions.cs" t="Include" />
+              <e p="IEffect.cs" t="Include" />
+            </e>
+            <e p="IAbilityExecutor.cs" t="Include" />
+          </e>
+          <e p="Affectable" t="Include">
+            <e p="AffectableContainerExtensions.cs" t="Include" />
+            <e p="IAffectable.cs" t="Include" />
+            <e p="IAffectableContainer.cs" t="Include" />
+          </e>
+          <e p="Character.asmdef" t="Include" />
+          <e p="Character.cs" t="Include" />
+          <e p="CharacterInfo" t="Include">
+            <e p="CharacterInfo.cs" t="Include" />
+            <e p="CharacterInfoEditor.cs" t="Include" />
+          </e>
+          <e p="CharacterPart.cs" t="Include" />
+          <e p="EditorScripts" t="Include">
+            <e p="CHaracterEditor.cs" t="Include" />
+          </e>
+          <e p="EffectModifier" t="Include">
+            <e p="EffectModifierContainerExtensions.cs" t="Include" />
+            <e p="IEffectModifier.cs" t="Include" />
+            <e p="IEffectModifierContainer.cs" t="Include" />
+          </e>
+          <e p="HP" t="Include">
+            <e p="HealthTypeExtensions.cs" t="Include" />
+            <e p="HitPoints.cs" t="Include" />
+            <e p="HPType.cs" t="Include" />
+          </e>
+          <e p="IUpdatable.cs" t="Include" />
+          <e p="Targeting" t="Include">
+            <e p="ITargeter.cs" t="Include" />
+            <e p="Targetable.cs" t="Include" />
+            <e p="TargetType.cs" t="Include" />
+          </e>
+          <e p="Trait" t="Include">
+            <e p="ReflectionILHelper" t="Include">
+              <e p="DelegateCreator.cs" t="Include" />
+              <e p="TypeCacher.cs" t="Include" />
+            </e>
+            <e p="RequireTraitAttribute.cs" t="Include" />
+            <e p="TraitAttribute.cs" t="Include" />
+            <e p="TraitConsumer.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Combo" t="Include">
+          <e p="Combo.asmdef" t="Include" />
+          <e p="Combo.cs" t="Include" />
+          <e p="ComboColors" t="Include">
+            <e p="ComboColors.cs" t="Include" />
+          </e>
+          <e p="ComboFrame" t="Include">
+            <e p="ComboFrame.cs" t="Include" />
+            <e p="FrameTypes" t="Include">
+              <e p="OrderedFrame.cs" t="Include" />
+              <e p="SimultaneousButtonFrame.cs" t="Include" />
+              <e p="SimultaneousFrame.cs" t="Include" />
+              <e p="SimultaneousSliderFrame.cs" t="Include" />
+              <e p="UnorderedFrame.cs" t="Include" />
+            </e>
+          </e>
+          <e p="ComboFrameDesigner" t="Include">
+            <e p="ComboCanvasEditor.cs" t="Include" />
+            <e p="ComboDesigner.cs" t="Include" />
+          </e>
+          <e p="ComboItems" t="Include">
+            <e p="ComboButton" t="Include">
+              <e p="ComboButton.cs" t="Include" />
+              <e p="ComboButtonEditor.cs" t="Include" />
+              <e p="ComboButtonSettings.cs" t="Include" />
+            </e>
+            <e p="ComboItem.cs" t="Include" />
+            <e p="ComboItemSettings.cs" t="Include" />
+            <e p="ComboSlider" t="Include">
+              <e p="Arrow" t="Include">
+                <e p="SliderArrow.cs" t="Include" />
+              </e>
+              <e p="ComboSlider.cs" t="Include" />
+              <e p="ComboSliderDataEditor.cs" t="Include" />
+              <e p="ComboSliderEditor.cs" t="Include" />
+              <e p="ComboSliderSettings.cs" t="Include" />
+              <e p="Segment" t="Include">
+                <e p="SliderSegment.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="ComboManager.cs" t="Include" />
+          <e p="Domain" t="Include">
+            <e p="Combo.cs" t="Include" />
+            <e p="ComboFrame.cs" t="Include" />
+          </e>
+          <e p="HitMissItem.cs" t="Include" />
+        </e>
+        <e p="Meta" t="Include">
+          <e p="CustomShortcutAttribute.cs" t="Include" />
+          <e p="EditorShortcutsWindow.cs" t="Include" />
+          <e p="FileTemplates.cs" t="Include" />
+          <e p="Generate" t="Include">
+            <e p="CharacterPart.cs" t="Include" />
+            <e p="PrefabBundle.cs" t="Include" />
+          </e>
+          <e p="GenerateWindow.cs" t="Include" />
+          <e p="Hepler.cs" t="Include" />
+          <e p="Meta.asmdef" t="Include" />
+          <e p="SceneLoaderWindow.cs" t="Include" />
+        </e>
+        <e p="Scenes" t="Include">
+          <e p="FightScene" t="Include">
+            <e p="AbilityButton.cs" t="Include" />
+            <e p="CharacterParts" t="Include">
+              <e p="Hull" t="Include">
+                <e p="Hull.cs" t="Include" />
+              </e>
+              <e p="ShieldGenerator.cs" t="Include" />
+            </e>
+            <e p="Characters" t="Include">
+              <e p="Player.cs" t="Include" />
+            </e>
+            <e p="Data" t="Include">
+              <e p="AbilitiesTree.cs" t="Include" />
+            </e>
+            <e p="FightScene.asmdef" t="Include" />
+            <e p="HPDisplay" t="Include">
+              <e p="DisplayData" t="Include">
+                <e p="HPDataManager.cs" t="Include" />
+                <e p="HPDataManagerEditor.cs" t="Include" />
+                <e p="HPDisplayData.cs" t="Include" />
+              </e>
+              <e p="HPBar" t="Include">
+                <e p="HPBar.cs" t="Include" />
+              </e>
+              <e p="HPDisplayer.cs" t="Include" />
+              <e p="IHPDataAdjustable.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Shared" t="Include">
+          <e p="AnimationBehaviours" t="Include">
+            <e p="DestroyOnExit.cs" t="Include" />
+          </e>
+          <e p="Behaviours" t="Include">
+            <e p="FaceTransform.cs" t="Include" />
+            <e p="Progressable" t="Include">
+              <e p="CubicProgressable" t="Include">
+                <e p="CubicProgressable.cs" t="Include" />
+                <e p="CubicProgressableEditor.cs" t="Include" />
+              </e>
+              <e p="IProgressable.cs" t="Include" />
+              <e p="ProgressableBehaviour.cs" t="Include" />
+            </e>
+          </e>
+          <e p="EditorScripts" t="Include">
+            <e p="AutocompleteSearchField.cs" t="Include" />
+            <e p="CustomScopes" t="Include">
+              <e p="CustomEditorScope.cs" t="Include" />
+              <e p="HorizontalScope.cs" t="Include" />
+              <e p="VerticalScope.cs" t="Include" />
+            </e>
+            <e p="ManagerWindow.cs" t="Include" />
+            <e p="Popup.cs" t="Include" />
+            <e p="Requirements.cs" t="Include" />
+          </e>
+          <e p="GameObjectManagement" t="Include">
+            <e p="ChildrenManagement.cs" t="Include" />
+            <e p="ComponentManagement.cs" t="Include" />
+            <e p="MonoBehaviourSingleton.cs" t="Include" />
+            <e p="Normalize" t="Include">
+              <e p="Transform.cs" t="Include" />
+            </e>
+          </e>
+          <e p="GeneralExtensions.cs" t="Include" />
+          <e p="Path" t="Include">
+            <e p="Bezier.cs" t="Include" />
+            <e p="Path2D.cs" t="Include" />
+            <e p="PathDrag" t="Include">
+              <e p="PathDrag.cs" t="Include" />
+            </e>
+          </e>
+          <e p="PositionalCamera.cs" t="Include" />
+          <e p="PropertyDrawers" t="Include">
+            <e p="EnumFlag.cs" t="Include" />
+            <e p="NamedArray.cs" t="Include" />
+            <e p="Required.cs" t="Include" />
+          </e>
+          <e p="Shared.asmdef" t="Include" />
+        </e>
+      </e>
+      <e p="C87B.sln" t="IncludeFlat" />
+      <e p="Character.csproj" t="IncludeRecursive" />
+      <e p="Combo.csproj" t="IncludeRecursive" />
+      <e p="FightScene.csproj" t="IncludeRecursive" />
+      <e p="Meta.csproj" t="IncludeRecursive" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Shared.csproj" t="IncludeRecursive" />
+      <e p="Temp/bin" t="ExcludeRecursive" />
+    </e>
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_C87B.-922031289.00" t="ExcludeRecursive" />
+  </component>
+</project>
