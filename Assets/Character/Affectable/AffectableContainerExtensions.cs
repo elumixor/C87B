@@ -10,7 +10,7 @@ namespace Character.Affectable {
         /// <param name="container">Affectable container</param>
         /// <typeparam name="TEffect">Affectable effect type</typeparam>
         /// <returns></returns>
-        public static IEnumerable<IAffectable<TEffect>> GetAffectables<TEffect>(this IAffectableContainer container) where TEffect : IEffect =>
+        public static IEnumerable<IAffectable<TEffect>> GetAffectables<TEffect>(this IAffectableContainer container) where TEffect : Effect =>
             container.Affectables.OfType<IAffectable<TEffect>>();
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace Character.Affectable {
         /// <param name="container">Affectable container</param>
         /// <typeparam name="TEffect">Effect type</typeparam>
         /// <returns></returns>
-        public static IAffectable<TEffect> GetAffectable<TEffect>(this IAffectableContainer container) where TEffect : IEffect =>
+        public static IAffectable<TEffect> GetAffectable<TEffect>(this IAffectableContainer container) where TEffect : Effect =>
             container.GetAffectables<TEffect>().First();
     }
 }

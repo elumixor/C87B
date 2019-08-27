@@ -7,12 +7,12 @@ namespace Shared.EditorScripts {
             Close();
         }
 
-        protected KeyCode code { get; private set; } 
+        protected KeyCode Code { get; private set; } 
         
         protected virtual void OnGUI() {
             var evt = Event.current;
-            code = evt.keyCode;
-            if (code == KeyCode.Escape) Close();
+            Code = evt.keyCode;
+            if (Code == KeyCode.Escape) Close();
         }
     }
 }

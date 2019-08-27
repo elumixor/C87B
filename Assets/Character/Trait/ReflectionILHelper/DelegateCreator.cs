@@ -32,7 +32,7 @@ namespace Character.Trait.ReflectionILHelper {
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         [Pure, NotNull]
-        public static GetterAbstract CreateDelegate([NotNull] MemberInfo memberInfo) {
+        public static GetterAbstract CreateDelegate([NotNull] this MemberInfo memberInfo) {
             var underlyingType = memberInfo.GetUnderlyingType();
             if (memberInfo.DeclaringType == null) throw new ArgumentNullException(nameof(memberInfo.DeclaringType));
 

@@ -1,28 +1,52 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Shared;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEngine.Windows.WebCam;
+using UnityEngine;
 
 namespace Meta {
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class CustomShortcutAttribute : Attribute {
         public string Hotkey { get; set; }
-        
-        public static class ShortcutMode {
-            public const string General = "general";
-            public const string Unclassified = "unclassified";
+        public ShortcutMode Mode { get; set; } = ShortcutMode.Unclassified;
+
+        public enum ShortcutMode {
+            Generate,
+            Unclassified,
         }
-        
-        public static (string name, string hotkey, Action method, string mode)[] ShortcutActions { get; private set; }
+
+        public static (string name, string hotkey, Action method, ShortcutMode mode)[] ShortcutActions { get; private set; }
 
         [DidReloadScripts]
+        [InitializeOnLoadMethod]
         private static void CacheActions() {
-            ShortcutActions = AppDomain.CurrentDomain
+            var types = AppDomain.CurrentDomain
                 .GetAssemblies()
-                .SelectMany(asm => asm.GetTypes())
-                .SelectMany(type => type
+                .SelectMany(asm => asm.GetTypes()).ToArray();
+
+            ShortcutActions = types.Where(type => IsDefined(type, typeof(CustomShortcutAttribute), true)
+                                                  && IsDefined(type, typeof(CreateAssetMenuAttribute), true))
+                .Select(type => {
+                    var createAsset = (CreateAssetMenuAttribute) GetCustomAttribute(type, typeof(CreateAssetMenuAttribute));
+                    var customShortcutAttribute = (CustomShortcutAttribute) GetCustomAttribute(type, typeof(CustomShortcutAttribute));
+                    return (name: createAsset.fileName,
+                        keys: customShortcutAttribute.Hotkey,
+                        method: new Action(() => {
+                            var asset = ScriptableObject.CreateInstance(type);
+
+                            AssetDatabase.CreateAsset(asset,
+                                Path.Combine(GeneralExtensions.GetSelectedPathOrFallback(), $"{createAsset.fileName}.asset"));
+                            AssetDatabase.SaveAssets();
+
+                            EditorUtility.FocusProjectWindow();
+
+                            Selection.activeObject = asset;
+                        }),
+                        mode: customShortcutAttribute.Mode);
+                }).Union(types.SelectMany(type => type
                     .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
                     .Where(method =>
                         IsDefined(method, typeof(CustomShortcutAttribute), true)
@@ -30,21 +54,16 @@ namespace Meta {
                         && method.ReturnType == typeof(void)
                         && method.GetParameters().Length == 0)
                     .Select(method => {
-                        var menuItem = ((MenuItem) GetCustomAttribute(method, typeof(MenuItem))).menuItem;
-                        var customShortcutAttribute = (CustomShortcutAttribute) GetCustomAttribute(method, typeof(CustomShortcutAttribute));
-                        var split = menuItem.Split('/');
-                        
-                        return (name: menuItem.Substring(0,
-                                menuItem.IndexOf(
-                                    menuItem.First(c =>
-                                        c == '_'
-                                        || c == '&'
-                                        || c == '%'
-                                        || c == '#'))),
+                        var customShortcutAttribute =
+                            (CustomShortcutAttribute) GetCustomAttribute(method, typeof(CustomShortcutAttribute));
+                        var itemName = ((MenuItem) GetCustomAttribute(method, typeof(MenuItem))).menuItem;
+                        var index = itemName.IndexOfAny(new[] {'_', '&', '%', '#'});
+
+                        return (name: index == -1 ? itemName : itemName.Substring(0, index),
                             keys: customShortcutAttribute.Hotkey,
                             method: (Action) method.CreateDelegate(typeof(Action)),
-                            mode: split.Length >= 3 ? split[2].ToLowerInvariant() : "unclassified");
-                    }))
+                            mode: customShortcutAttribute.Mode);
+                    })))
                 .ToArray();
         }
     }

@@ -1,14 +1,19 @@
-using Combo.ComboItems.ComboButton;
-using Combo.ComboItems.ComboSlider;
+using Combo.DataContainers;
+using Combo.Frame;
+using Combo.Items.Button;
+using Combo.Items.Slider;
+using Shared.Behaviours;
 using UnityEngine;
-using CFrame = Combo.ComboFrame.ComboFrame;
 
 namespace Combo {
     /// <summary>
     /// Combo class represents collection of combo frames, encapsulates execution logic
     /// </summary>
     public class Combo : HitMissItem {
-        public Domain.Combo combo;
+        /// <summary>
+        /// Data of combo
+        /// </summary>
+        public ComboData comboData;
 
         /// <summary>
         /// Prefab of <see cref="ComboSlider"/>
@@ -22,16 +27,14 @@ namespace Combo {
         
         private int currentFrameIndex;
         private float accumulatedAccuracy;
-        private CFrame currentFrame;
+        private ComboFrame currentFrame;
 
-        private void Awake() {
-            NextFrame();
-        }
+        private void Start() => NextFrame();
 
         private void NextFrame() {
-            if (currentFrameIndex == combo.Length) ItemHit(accumulatedAccuracy / combo.Length);
+            if (currentFrameIndex == comboData.Length) ItemHit(accumulatedAccuracy / comboData.Length);
             else {
-                currentFrame = CFrame.Create(buttonPrefab, sliderPrefab, combo[currentFrameIndex++], transform);
+                currentFrame = ComboFrame.Create(buttonPrefab, sliderPrefab, comboData[currentFrameIndex++], transform);
                 currentFrame.OnHit += accuracy => {
                     accumulatedAccuracy += accuracy;
                     NextFrame();
@@ -44,16 +47,16 @@ namespace Combo {
         }
         
         /// <summary>
-        /// Creates new instance of combo frame 
+        /// Factory method for combo frame 
         /// </summary>
-        public static Combo Create(ComboSlider sliderPrefab, ComboButton buttonPrefab, Domain.Combo combo, Transform parent) {
+        public static Combo Create(ComboSlider sliderPrefab, ComboButton buttonPrefab, ComboData comboData, Transform parent) {
             var instance = new GameObject("Combo", typeof(RectTransform), typeof(Combo));
             instance.transform.SetParent(parent);
 
             var comboComponent = instance.GetComponent<Combo>();
             comboComponent.sliderPrefab = sliderPrefab;
             comboComponent.buttonPrefab = buttonPrefab;
-            comboComponent.combo = Domain.Combo.Create(combo);
+            comboComponent.comboData = comboData;
 
             return comboComponent;
         }

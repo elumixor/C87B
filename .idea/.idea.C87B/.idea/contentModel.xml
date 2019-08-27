@@ -8,10 +8,13 @@
           <e p="Ability" t="Include">
             <e p="Ability.cs" t="Include" />
             <e p="Effects" t="Include">
+              <e p="Effect.cs" t="Include" />
               <e p="EffectExtensions.cs" t="Include" />
-              <e p="IEffect.cs" t="Include" />
             </e>
-            <e p="IAbilityExecutor.cs" t="Include" />
+          </e>
+          <e p="AbilityDisplay" t="Include">
+            <e p="AbilityDisplayer.cs" t="Include" />
+            <e p="AbilityIcon.cs" t="Include" />
           </e>
           <e p="Affectable" t="Include">
             <e p="AffectableContainerExtensions.cs" t="Include" />
@@ -20,10 +23,6 @@
           </e>
           <e p="Character.asmdef" t="Include" />
           <e p="Character.cs" t="Include" />
-          <e p="CharacterInfo" t="Include">
-            <e p="CharacterInfo.cs" t="Include" />
-            <e p="CharacterInfoEditor.cs" t="Include" />
-          </e>
           <e p="CharacterPart.cs" t="Include" />
           <e p="EditorScripts" t="Include">
             <e p="CHaracterEditor.cs" t="Include" />
@@ -40,8 +39,8 @@
           </e>
           <e p="IUpdatable.cs" t="Include" />
           <e p="Targeting" t="Include">
-            <e p="ITargeter.cs" t="Include" />
             <e p="Targetable.cs" t="Include" />
+            <e p="Targeter.cs" t="Include" />
             <e p="TargetType.cs" t="Include" />
           </e>
           <e p="Trait" t="Include">
@@ -57,12 +56,21 @@
         <e p="Combo" t="Include">
           <e p="Combo.asmdef" t="Include" />
           <e p="Combo.cs" t="Include" />
-          <e p="ComboColors" t="Include">
-            <e p="ComboColors.cs" t="Include" />
+          <e p="ComboColors.cs" t="Include" />
+          <e p="ComboFrameType.cs" t="Include" />
+          <e p="ComboManager.cs" t="Include" />
+          <e p="DataContainers" t="Include">
+            <e p="ComboButtonData.cs" t="Include" />
+            <e p="ComboData.cs" t="Include" />
+            <e p="ComboFrameData.cs" t="Include" />
+            <e p="ComboItemData.cs" t="Include" />
+            <e p="ComboSliderData.cs" t="Include" />
           </e>
-          <e p="ComboFrame" t="Include">
+          <e p="Frame" t="Include">
             <e p="ComboFrame.cs" t="Include" />
-            <e p="FrameTypes" t="Include">
+            <e p="ComboFrameDesigner.cs" t="Include" />
+            <e p="ComboFrameDesignerEditor.cs" t="Include" />
+            <e p="Types" t="Include">
               <e p="OrderedFrame.cs" t="Include" />
               <e p="SimultaneousButtonFrame.cs" t="Include" />
               <e p="SimultaneousFrame.cs" t="Include" />
@@ -70,65 +78,53 @@
               <e p="UnorderedFrame.cs" t="Include" />
             </e>
           </e>
-          <e p="ComboFrameDesigner" t="Include">
-            <e p="ComboCanvasEditor.cs" t="Include" />
-            <e p="ComboDesigner.cs" t="Include" />
-          </e>
-          <e p="ComboItems" t="Include">
-            <e p="ComboButton" t="Include">
+          <e p="Helper.cs" t="Include" />
+          <e p="Items" t="Include">
+            <e p="Button" t="Include">
               <e p="ComboButton.cs" t="Include" />
               <e p="ComboButtonEditor.cs" t="Include" />
-              <e p="ComboButtonSettings.cs" t="Include" />
             </e>
             <e p="ComboItem.cs" t="Include" />
-            <e p="ComboItemSettings.cs" t="Include" />
-            <e p="ComboSlider" t="Include">
+            <e p="Designers" t="Include">
+              <e p="ComboButtonDesigner.cs" t="Include" />
+              <e p="ComboSliderDesigner.cs" t="Include" />
+              <e p="Editors" t="Include">
+                <e p="ComboButtonDesignerEditor.cs" t="Include" />
+                <e p="ComboItemDataDesigner.cs" t="Include" />
+                <e p="ComboSliderDesignerEditor.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Editors" t="Include">
+              <e p="ComboButtonDataEditor.cs" t="Include" />
+              <e p="ComboItemDataEditor.cs" t="Include" />
+              <e p="ComboSliderDataEditor.cs" t="Include" />
+            </e>
+            <e p="Slider" t="Include">
               <e p="Arrow" t="Include">
                 <e p="SliderArrow.cs" t="Include" />
               </e>
               <e p="ComboSlider.cs" t="Include" />
-              <e p="ComboSliderDataEditor.cs" t="Include" />
-              <e p="ComboSliderEditor.cs" t="Include" />
-              <e p="ComboSliderSettings.cs" t="Include" />
               <e p="Segment" t="Include">
                 <e p="SliderSegment.cs" t="Include" />
               </e>
             </e>
           </e>
-          <e p="ComboManager.cs" t="Include" />
-          <e p="Domain" t="Include">
-            <e p="Combo.cs" t="Include" />
-            <e p="ComboFrame.cs" t="Include" />
-          </e>
-          <e p="HitMissItem.cs" t="Include" />
         </e>
         <e p="Meta" t="Include">
           <e p="CustomShortcutAttribute.cs" t="Include" />
           <e p="EditorShortcutsWindow.cs" t="Include" />
           <e p="FileTemplates.cs" t="Include" />
-          <e p="Generate" t="Include">
-            <e p="CharacterPart.cs" t="Include" />
-            <e p="PrefabBundle.cs" t="Include" />
-          </e>
           <e p="GenerateWindow.cs" t="Include" />
           <e p="Hepler.cs" t="Include" />
           <e p="Meta.asmdef" t="Include" />
+          <e p="PrefabBundle.cs" t="Include" />
           <e p="SceneLoaderWindow.cs" t="Include" />
         </e>
         <e p="Scenes" t="Include">
           <e p="FightScene" t="Include">
-            <e p="AbilityButton.cs" t="Include" />
-            <e p="CharacterParts" t="Include">
-              <e p="Hull" t="Include">
-                <e p="Hull.cs" t="Include" />
-              </e>
-              <e p="ShieldGenerator.cs" t="Include" />
-            </e>
             <e p="Characters" t="Include">
-              <e p="Player.cs" t="Include" />
-            </e>
-            <e p="Data" t="Include">
-              <e p="AbilitiesTree.cs" t="Include" />
+              <e p="Ship.cs" t="Include" />
+              <e p="ShipEditor.cs" t="Include" />
             </e>
             <e p="FightScene.asmdef" t="Include" />
             <e p="HPDisplay" t="Include">
@@ -143,6 +139,12 @@
               <e p="HPDisplayer.cs" t="Include" />
               <e p="IHPDataAdjustable.cs" t="Include" />
             </e>
+            <e p="SpecializedParts" t="Include">
+              <e p="EnergyGenerator.cs" t="Include" />
+              <e p="Hull.cs" t="Include" />
+              <e p="PoweredPart.cs" t="Include" />
+              <e p="ShieldGenerator.cs" t="Include" />
+            </e>
           </e>
         </e>
         <e p="Shared" t="Include">
@@ -150,7 +152,9 @@
             <e p="DestroyOnExit.cs" t="Include" />
           </e>
           <e p="Behaviours" t="Include">
+            <e p="Designer.cs" t="Include" />
             <e p="FaceTransform.cs" t="Include" />
+            <e p="HitMissItem.cs" t="Include" />
             <e p="Progressable" t="Include">
               <e p="CubicProgressable" t="Include">
                 <e p="CubicProgressable.cs" t="Include" />
@@ -167,9 +171,11 @@
               <e p="HorizontalScope.cs" t="Include" />
               <e p="VerticalScope.cs" t="Include" />
             </e>
+            <e p="EnumEditor.cs" t="Include" />
             <e p="ManagerWindow.cs" t="Include" />
             <e p="Popup.cs" t="Include" />
             <e p="Requirements.cs" t="Include" />
+            <e p="SaveAssetWindow.cs" t="Include" />
           </e>
           <e p="GameObjectManagement" t="Include">
             <e p="ChildrenManagement.cs" t="Include" />

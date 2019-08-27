@@ -6,7 +6,7 @@ namespace Character.EffectModifier {
     /// </summary>
     /// <typeparam name="TInEffect">In effect type</typeparam>
     /// <typeparam name="TOutEffect">Out effect type</typeparam>
-    public interface IEffectModifier<in TInEffect, out TOutEffect> where TInEffect : IEffect where TOutEffect : IEffect {
+    public interface IEffectModifier<in TInEffect, out TOutEffect> where TInEffect : Effect where TOutEffect : Effect {
         /// <summary>
         /// Changes effect into a new one
         /// </summary>
@@ -19,10 +19,10 @@ namespace Character.EffectModifier {
     /// Generic effect modifier to custom out effect
     /// </summary>
     /// <typeparam name="TOutEffect">Out effect type</typeparam>
-    public interface IEffectModifier<out TOutEffect> : IEffectModifier<IEffect, TOutEffect> where TOutEffect : IEffect { }
+    public interface IEffectModifier<out TOutEffect> : IEffectModifier<Effect, TOutEffect> where TOutEffect : Effect { }
 
     /// <summary>
     /// Generic effect modifier
     /// </summary>
-    public interface IEffectModifier : IEffectModifier<IEffect, IEffect> { }
+    public interface IEffectModifier : IEffectModifier<Effect, Effect> { }
 }

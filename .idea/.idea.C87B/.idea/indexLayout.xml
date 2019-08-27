@@ -20,6 +20,7 @@
     <explicitExcludes>
       <Path>.git</Path>
       <Path>.idea</Path>
+      <Path>App_Packages</Path>
       <Path>FightScene</Path>
       <Path>Library</Path>
       <Path>Temp</Path>

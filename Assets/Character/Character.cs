@@ -15,11 +15,11 @@ namespace Character {
     /// These parts are added separately, each as separate component
     /// </summary>
     [DisallowMultipleComponent]
-    public abstract class Character : MonoBehaviour, ITargetable, IUpdatable<IAffectable> {
+    public abstract class Character : Targetable, IUpdatable<IAffectable> {
         /// <summary>
         /// Collections of character parts
         /// </summary>
-        [SerializeField] private List<CharacterPart> parts = new List<CharacterPart>();
+        [SerializeField] protected List<CharacterPart> parts = new List<CharacterPart>();
 
         #region Trait management
 
@@ -105,7 +105,7 @@ namespace Character {
             /// </summary>
             /// <typeparam name="T">Retrieved type</typeparam>
             /// <returns></returns>
-            [Pure, CanBeNull]
+            [Pure, NotNull]
             public T[] GetValues<T>() => traits.ContainsKey(typeof(T)) ? traits[typeof(T)].Values.OfType<T>().ToArray() : new T[0];
 
             /// <summary>
@@ -122,7 +122,7 @@ namespace Character {
 
             public TraitsManager() { }
 
-            public TraitsManager(IEnumerable<CharacterPart> parts) {
+            public TraitsManager([NotNull] IEnumerable<CharacterPart> parts) {
                 foreach (var part in parts) {
                     foreach (var (type, provider) in TypeCacher.type2ProvidedTypes[part.GetType()]) {
                         if (!traits.ContainsKey(type)) traits[type] = new Trait();
@@ -142,12 +142,12 @@ namespace Character {
         /// <summary>
         /// Affectables
         /// </summary>
-        public IEnumerable<IAffectable> Affectables => parts.OfType<IAffectable>();
+        public override IEnumerable<IAffectable> Affectables => parts.OfType<IAffectable>();
 
         /// <summary>
         /// Character traits
         /// </summary>
-        public IEnumerable<IEffectModifier> Modifiers => parts.OfType<IEffectModifier>();
+        public override IEnumerable<IEffectModifier> Modifiers => parts.OfType<IEffectModifier>();
 
         #region Parts public methods
 
@@ -155,7 +155,8 @@ namespace Character {
         /// Adds part to <see cref="parts"/> and registers it as provider in <see cref="traitManager"/>
         /// </summary>
         /// <param name="part">Character part instance to be added</param>
-        internal void AddPart(CharacterPart part) {
+        [PublicAPI]
+        internal void AddPart([NotNull] CharacterPart part) {
             if (parts.Contains(part)) return;
 
             parts.Add(part);
@@ -167,7 +168,8 @@ namespace Character {
         /// Removes part from parts and updates provided traits
         /// </summary>
         /// <param name="part">Character part instance to be removed</param>
-        internal void RemovePart(CharacterPart part) {
+        [PublicAPI]
+        internal void RemovePart([NotNull] CharacterPart part) {
             if (parts.Remove(part))
                 foreach (var (type, _) in TypeCacher.type2ProvidedTypes[part.GetType()])
                     traitManager[type].RemoveProvider(part);

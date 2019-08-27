@@ -1,6 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using Shared.EditorScripts;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Shared {
     public static class GeneralExtensions {
@@ -43,7 +51,75 @@ namespace Shared {
                 if (baseType == cur) return true;
                 childType = childType.BaseType;
             }
+
             return false;
         }
+
+        public static string ToSentenceCase(this string str) =>
+            Regex.Replace(
+                Regex.Replace(
+                    str,
+                    @"(\P{Ll})(\P{Ll}\p{Ll})",
+                    "$1 $2"
+                ),
+                @"(\p{Ll})(\P{Ll})",
+                "$1 $2"
+            );
+
+        public static TResult ArrayValueIn<TEnum, TResult>(this TEnum enumValue, IList<TResult> values) where TEnum : Enum {
+            var types = (TEnum[]) Enum.GetValues(typeof(TEnum));
+
+            for (var i = 0; i < types.Length; i++)
+                if (Equals(types[i], enumValue))
+                    return values[i];
+
+            return default;
+        }
+
+        public static string GetAssetPath(this UnityEngine.Object @object) => AssetDatabase.GetAssetPath(@object);
+        public static bool IsSavedFile(this UnityEngine.Object @object) => !string.IsNullOrEmpty(@object.GetAssetPath());
+        public static string SaveNew(this ScriptableObject scriptableObject, string directoryName, string fileName) {
+            var name = System.IO.Path.Combine(directoryName, $"{fileName}.asset");
+            var i = 1;
+            while (File.Exists(fileName)) name = System.IO.Path.Combine(directoryName, $"{fileName} {i++}.asset");
+
+            AssetDatabase.CreateAsset(scriptableObject, name);
+            return name;
+        }
+
+        public static void SaveDialog(this ScriptableObject scriptableObject, string directoryName, string fileName) =>
+            SaveAssetWindow.Init(scriptableObject, directoryName, fileName);
+        
+        /// <summary>
+        /// Retrieves selected folder on Project view.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSelectedPathOrFallback() {
+            var path = "Assets";
+
+            foreach (var obj in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets)) {
+                path = AssetDatabase.GetAssetPath(obj);
+                if (string.IsNullOrEmpty(path) || !File.Exists(path)) continue;
+
+                path = System.IO.Path.GetDirectoryName(path);
+                break;
+            }
+
+            return path;
+        }
+
+        [Pure, NotNull]
+        public static string ToNamespace([NotNull] this string filePath) =>
+            string.Join(".", filePath.Split('\\').Skip(2));
+
+        [Pure, NotNull]
+        public static string Cased([NotNull] this string objectName) => $"{char.ToUpper(objectName[0])}{objectName.Substring(1)}";
+
+        public static Color SetAlpha(this Color color, float alpha) {
+            color.a = alpha;
+            return color;
+        }
+        
+        public static void SetColorAlpha(this Image image, float alpha) => image.color = image.color.SetAlpha(alpha);
     }
 }

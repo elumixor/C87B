@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Shared;
+using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace Character.Trait.ReflectionILHelper {
     public static class TypeCacher {
         /// <summary>
         /// <para>
-        ///     Collection of types, deriving from <see cref="CharacterPart{TData}"/> and mapped publicly available types (traits)
+        ///     Collection of types, deriving from <see cref="CharacterPart"/> and mapped publicly available types (traits)
         ///     via fields or properties with functions to access them.
         /// </para>
         /// <para>
@@ -39,6 +40,7 @@ namespace Character.Trait.ReflectionILHelper {
         /// Updates <see cref="type2ProvidedTypes"/> and <see cref="consumerType2RequiredTypes"/>
         /// </summary>
         [DidReloadScripts]
+        [InitializeOnLoadMethod]
         private static void UpdateTypesDictionary() {
             // Get all types in current domain
             var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes())
@@ -53,7 +55,7 @@ namespace Character.Trait.ReflectionILHelper {
             type2ProvidedTypes =  derivedTypes.ToDictionary(
                 t => t,
                 t => t.GetMembers(FLags).Where(member => Attribute.IsDefined(member, typeof(TraitAttribute), true))
-                    .Select(mi => (Type: mi.GetUnderlyingType(), GetterAbstract: DelegateCreator.CreateDelegate(mi))).ToArray());
+                    .Select(mi => (Type: mi.GetUnderlyingType(), GetterAbstract: mi.CreateDelegate())).ToArray());
             
             var consumerTraitType = typeof(TraitConsumer);
             var requireTraitAttributeType = typeof(RequireTraitAttribute);

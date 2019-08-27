@@ -12,21 +12,22 @@ namespace Shared.Path {
         /// Minimum of control points for path
         /// </summary>
         public const int Length = 4;
+
         /// <summary>
         /// Control points of path
         /// </summary>
-        [SerializeField]
-        private Vector2[] points;
+        [SerializeField] private Vector2[] points;
+
         /// <summary>
         /// Distance between points
         /// </summary>
-        [Range(.1f, 100f)]
-        public float spacing = 1f;
+        [Range(.1f, 100f)] public float spacing = 1f;
+
         /// <summary>
         /// How close are the points to the actual curve
         /// </summary>
-        [Range(.1f, 100f)]
-        public float resolution = 1f;
+        [Range(.1f, 100f)] public float resolution = 1f;
+
         /// <summary>
         /// Create path as copy of another
         /// </summary>
@@ -37,34 +38,59 @@ namespace Shared.Path {
             points = new Vector2[Length];
             Array.Copy(other.points, points, Length);
         }
+
         /// <summary>
         /// Create default path
         /// </summary>
         public Path2D() {
             points = new[] {Vector2.left, (Vector2.left + Vector2.up) * .5f, (Vector2.right + Vector2.down) * .5f, Vector2.right};
         }
-        public static bool operator ==([NotNull] Path2D a, [NotNull] Path2D b) {
+
+        /// <summary>
+        /// Create path with center point
+        /// </summary>
+        public Path2D(Vector2 center) {
+            points = new[] {
+                Vector2.left + center,
+                (Vector2.left + Vector2.up) * .5f + center,
+                (Vector2.right + Vector2.down) * .5f + center,
+                Vector2.right + center
+            };
+        }
+
+        public static bool operator ==([CanBeNull] Path2D a, [CanBeNull] Path2D b) {
+            if (ReferenceEquals(a, null)) {
+                return ReferenceEquals(b, null);
+            }
+
+            if (ReferenceEquals(b, null)) return false;
+            
             for (var i = 0; i < Length; i++) {
                 if (a[i] != b[i]) return false;
             }
 
             return false;
         }
+
         public static bool operator !=(Path2D a, Path2D b) {
             return !(a == b);
         }
+
         private bool Equals(Path2D other) {
             return Equals(points, other.points);
         }
+
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
 
             return obj.GetType() == GetType() && Equals((Path2D) obj);
         }
+
         public override int GetHashCode() {
             return points != null ? points.GetHashCode() : 0;
         }
+
         /// <summary>
         /// Indexer as shortcut to <see cref="points"/>
         /// </summary>
@@ -72,6 +98,7 @@ namespace Shared.Path {
             get => points[i];
             set => points[i] = value;
         }
+
         /// <summary>
         /// Start point of a path
         /// </summary>
@@ -79,6 +106,7 @@ namespace Shared.Path {
             get => points[0];
             set => points[0] = value;
         }
+
         /// <summary>
         /// End point of a path
         /// </summary>
@@ -86,6 +114,7 @@ namespace Shared.Path {
             get => points[3];
             set => points[3] = value;
         }
+
         /// <summary>
         /// Tangent of the starting point
         /// </summary>
@@ -93,6 +122,7 @@ namespace Shared.Path {
             get => points[1];
             set => points[1] = value;
         }
+
         /// <summary>
         /// Tangent of the ending point
         /// </summary>
@@ -100,18 +130,21 @@ namespace Shared.Path {
             get => points[2];
             set => points[2] = value;
         }
+
         /// <summary>
         /// Iterate over points
         /// </summary>
         public IEnumerator<Vector2> GetEnumerator() {
             return points.ToList().GetEnumerator();
         }
+
         /// <summary>
         /// Iterate over points
         /// </summary>
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
+
         /// <summary>
         /// Interpolates evenly spaced points on the path
         /// </summary>
@@ -152,6 +185,7 @@ namespace Shared.Path {
 
             return evenlySpaced;
         }
+
         /// <summary>
         /// Creates mesh from path
         /// </summary>
@@ -212,9 +246,18 @@ namespace Shared.Path {
             for (var i = 0; i < Length; i++) newPath[i] = path[i] + offset;
             return newPath;
         }
-        
+
         public static Path2D operator -(Path2D path, Vector2 offset) {
             return path + -offset;
+        }
+
+        /// <summary>
+        /// Scales path around Vector2.zero
+        /// </summary>
+        public static Path2D operator *(Path2D path, float scale) {
+            var newPath = new Path2D(path);
+            for (var i = 0; i < Length; i++) newPath[i] = path[i] * scale;
+            return newPath;
         }
     }
 }

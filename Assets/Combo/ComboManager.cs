@@ -1,6 +1,9 @@
 using System;
-using Combo.ComboItems.ComboButton;
-using Combo.ComboItems.ComboSlider;
+using Combo.DataContainers;
+using Combo.Items.Button;
+using Combo.Items.Slider;
+using Shared;
+using Shared.PropertyDrawers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,36 +11,53 @@ namespace Combo {
     /// <summary>
     /// Combo Manager is responsible for displaying and handling <see cref="Combo"/>
     /// </summary>
+    [RequireComponent(typeof(Canvas)), RequireComponent(typeof(Image))]
     public class ComboManager : MonoBehaviour {
         /// <summary>
         /// Execution canvas
         /// </summary>
-        public Canvas executionCanvas;
+        [Required, SerializeField]
+        private Canvas executionCanvas;
 
-        public Image background;
-        
+        /// <summary>
+        /// Reference to background component
+        /// </summary>
+        [Required, SerializeField]
+        private Image background;
+
         /// <summary>
         /// Prefab of <see cref="ComboSlider"/>
         /// </summary>
-        public ComboSlider sliderPrefab;
+        [Required, SerializeField]
+        private ComboSlider sliderPrefab;
 
         /// <summary>
         /// Prefab of <see cref="ComboButton"/>
         /// </summary>
-        public ComboButton buttonPrefab;
-        
+        [Required, SerializeField]
+        private ComboButton buttonPrefab;
+
+        /// <summary>
+        /// Assigns execution canvas on awake
+        /// </summary>
+        private void Reset() {
+            executionCanvas = GetComponent<Canvas>();
+            background = GetComponent<Image>();
+            background.SetColorAlpha(0f);
+        }
+
         /// <summary>
         /// Instantiates 
         /// </summary>
-        public void BeginCombo(Domain.Combo combo, Action<float> onSuccess, Action onFail) {
-            var backgroundInstance = Instantiate(background, executionCanvas.transform);
-            var comboInstance = Combo.Create(sliderPrefab, buttonPrefab, combo, executionCanvas.transform);
+        public void BeginCombo(ComboData comboData, Action<float> onSuccess, Action onFail) {
+            background.SetColorAlpha(1f); // todo: gradually / animate
+            var comboInstance = Combo.Create(sliderPrefab, buttonPrefab, comboData, executionCanvas.transform);
             comboInstance.OnHit += accuracy => {
-                Destroy(backgroundInstance.gameObject);
+                background.SetColorAlpha(0f);
                 onSuccess(accuracy);
             };
             comboInstance.OnMissed += () => {
-                Destroy(backgroundInstance.gameObject);
+                background.SetColorAlpha(0f);
                 onFail();
             };
         }
