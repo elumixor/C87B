@@ -1,20 +1,23 @@
-﻿using UnityEngine;
+﻿using Shared.Behaviours.Animable;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Combo.Items.Slider.Arrow {
+namespace Shared.Path.PathDrag {
     [RequireComponent(typeof(Animator))]
-    public class SliderArrow : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
+    public class AnimationDraggable : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IAnimable {
         /// <summary>
         /// Animator component reference
         /// </summary>
-        [SerializeField] public Animator animator;
+        [SerializeField]
+        private Animator animator;
+        public Animator Animator => animator;
 
         private static readonly int IsDragging = Animator.StringToHash("IsDragging");
 
         /// <summary>
-        /// Assign components on script change
+        /// Assign animator component
         /// </summary>
-        private void OnValidate() {
+        private void Reset() {
             animator = GetComponent<Animator>();
         }
 

@@ -29,6 +29,37 @@ namespace Shared.Path {
         [Range(.1f, 100f)] public float resolution = 1f;
 
         /// <summary>
+        /// Position is equal to center of a line between two farthest points
+        /// </summary>
+        public Vector2 Position {
+            get => this.Aggregate(Vector2.zero, (a, b) => a + b, v2 => v2 / Length);
+            set {
+                var position = Position;
+                for (var i = 0; i < Length; i++) points[i] += value - position;
+            }
+        }
+
+        /// <summary>
+        /// Size is distance between two farthest points
+        /// </summary>
+        public float Size {
+            get => this.Select(p1 => this.Select(p2 => Vector2.Distance(p1, p2)).Max()).Max();
+            set {
+                var center = Position;
+                var size = Size;
+
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (size == 0f) return;
+
+                for (var i = 0; i < Length; i++) {
+                    points[i] -= center;
+                    points[i] *= value / size;
+                    points[i] += center;
+                }
+            }
+        }
+
+        /// <summary>
         /// Create path as copy of another
         /// </summary>
         /// <param name="other">Path to copy</param>
@@ -64,7 +95,7 @@ namespace Shared.Path {
             }
 
             if (ReferenceEquals(b, null)) return false;
-            
+
             for (var i = 0; i < Length; i++) {
                 if (a[i] != b[i]) return false;
             }

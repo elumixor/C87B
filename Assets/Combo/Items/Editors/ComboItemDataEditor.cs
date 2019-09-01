@@ -21,7 +21,7 @@ namespace Combo.Items.Editors {
             } else offset = Vector2.zero;
         }
 
-        public override void OnInspectorGUI() {
+        protected void OffsetInspectorGUI() {
             var newCanvas = (RectTransform) EditorGUILayout.ObjectField("Canvas", canvas, typeof(RectTransform), true);
             if (newCanvas != canvas) {
                 canvas = newCanvas;
@@ -30,6 +30,10 @@ namespace Combo.Items.Editors {
                     offset = new Vector2(rect.width * .5f, rect.height * .5f);
                 } else offset = Vector2.zero;
             }
+        }
+
+        public override void OnInspectorGUI() {
+            OffsetInspectorGUI();
 
             itemData.Position += offset;
             var oldPosition = itemData.Position;

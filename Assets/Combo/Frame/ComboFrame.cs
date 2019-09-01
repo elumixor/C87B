@@ -68,7 +68,7 @@ namespace Combo.Frame {
                 } else {
                     var sliderData = (ComboSliderData) item;
                     var instance = (ComboSlider) PrefabUtility.InstantiatePrefab(sliderPrefab, transform);
-                    instance.path = sliderData.path;
+//                    instance.path = sliderData.path;
                     return (ComboItem) instance;
                 }
             }).ToList();

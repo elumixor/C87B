@@ -13,7 +13,7 @@ namespace Combo.Frame.Types {
 
             // Let's subscribe to sliders' events
             foreach (var slider in sliders) {
-                slider.PathDrag.OnDragStarted += (index, total) => HandleStart();
+//                slider.PathDrag.OnDragStarted += (index, total) => HandleStart();
             }
         }
 

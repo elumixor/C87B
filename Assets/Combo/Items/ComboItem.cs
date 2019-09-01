@@ -19,7 +19,7 @@ namespace Combo.Items {
     /// </para>
     /// </summary>
     /// <seealso cref="IDestroyOnExitHandler"/>
-    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Animator), typeof(RectTransform))]
     public abstract class ComboItem : HitMissItem, IDestroyOnExitHandler, IAnimable {
         /// <summary>
         /// Destroyed event, that is raised after animation has finished

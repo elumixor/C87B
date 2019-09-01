@@ -105,14 +105,10 @@
               <e p="ComboSliderDataEditor.cs" t="Include" />
             </e>
             <e p="Slider" t="Include">
-              <e p="Arrow" t="Include">
-                <e p="SliderArrow.cs" t="Include" />
-              </e>
               <e p="ComboSlider.cs" t="Include" />
               <e p="ComboSliderEditor.cs" t="Include" />
-              <e p="Segment" t="Include">
-                <e p="SliderSegment.cs" t="Include" />
-              </e>
+              <e p="SliderArrow.cs" t="Include" />
+              <e p="SliderSegment.cs" t="Include" />
             </e>
           </e>
         </e>
@@ -201,8 +197,11 @@
           <e p="Path" t="Include">
             <e p="Bezier.cs" t="Include" />
             <e p="Path2D.cs" t="Include" />
+            <e p="Path2DExtensions.cs" t="Include" />
             <e p="PathDrag" t="Include">
-              <e p="PathDrag.cs" t="Include" />
+              <e p="AnimationDraggable.cs" t="Include" />
+              <e p="PathDraggable.cs" t="Include" />
+              <e p="PathDraggableEditor.cs" t="Include" />
             </e>
           </e>
           <e p="PositionalCamera.cs" t="Include" />
