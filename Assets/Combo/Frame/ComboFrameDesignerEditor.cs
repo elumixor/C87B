@@ -4,6 +4,7 @@ using Combo.DataContainers;
 using Combo.Items.Editors;
 using Shared.Behaviours;
 using UnityEditor;
+using UnityEngine;
 
 namespace Combo.Frame {
     [CustomEditor(typeof(ComboFrameDesigner))]
@@ -13,6 +14,7 @@ namespace Combo.Frame {
         protected override void OnEnable() {
             base.OnEnable();
             editors = designer.itemData.items.Select(CreateEditor).ToList();
+            Tools.hidden = true;
         }
 
         protected override void OnSceneGUI() {
@@ -22,7 +24,11 @@ namespace Combo.Frame {
                 if (editor is ComboSliderDataEditor sliderDataEditor) sliderDataEditor.OnSceneGUI();
             }
         }
-        
+
+        public override void OnInspectorGUI() {
+            base.OnInspectorGUI();
+            editors = designer.itemData.items.Select(CreateEditor).ToList();
+        }
         protected override string DirectoryName => Helper.Directories.comboFrame;
     }
 }

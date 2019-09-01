@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Character.Affectable;
 using Character.EffectModifier;
@@ -16,6 +17,11 @@ namespace Character {
     /// </summary>
     [DisallowMultipleComponent]
     public abstract class Character : Targetable, IUpdatable<IAffectable> {
+        /// <summary>
+        /// Character's name (for debugging)
+        /// </summary>
+        [SerializeField] protected new string name = "Character";
+
         /// <summary>
         /// Collections of character parts
         /// </summary>

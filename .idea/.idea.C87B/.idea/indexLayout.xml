@@ -7,13 +7,14 @@
       <Path>Library/PackageCache/com.unity.analytics@3.3.2</Path>
       <Path>Library/PackageCache/com.unity.collab-proxy@1.2.16</Path>
       <Path>Library/PackageCache/com.unity.ext.nunit@1.0.0</Path>
-      <Path>Library/PackageCache/com.unity.ide.rider@1.0.4</Path>
+      <Path>Library/PackageCache/com.unity.ide.rider@1.1.0</Path>
       <Path>Library/PackageCache/com.unity.ide.visualstudio@1.0.5</Path>
-      <Path>Library/PackageCache/com.unity.ide.vscode@1.0.4</Path>
+      <Path>Library/PackageCache/com.unity.ide.vscode@1.0.7</Path>
       <Path>Library/PackageCache/com.unity.purchasing@2.0.6</Path>
-      <Path>Library/PackageCache/com.unity.test-framework@1.0.12</Path>
-      <Path>Library/PackageCache/com.unity.textmeshpro@2.0.0</Path>
-      <Path>Library/PackageCache/com.unity.vectorgraphics@2.0.0-preview.4</Path>
+      <Path>Library/PackageCache/com.unity.test-framework@1.0.17</Path>
+      <Path>Library/PackageCache/com.unity.textmeshpro@2.0.1</Path>
+      <Path>Library/PackageCache/com.unity.timeline@1.1.0</Path>
+      <Path>Library/PackageCache/com.unity.vectorgraphics@2.0.0-preview.5</Path>
       <Path>Packages</Path>
       <Path>ProjectSettings</Path>
     </explicitIncludes>
@@ -23,6 +24,7 @@
       <Path>App_Packages</Path>
       <Path>FightScene</Path>
       <Path>Library</Path>
+      <Path>Logs</Path>
       <Path>Temp</Path>
       <Path>obj</Path>
     </explicitExcludes>

@@ -4,6 +4,7 @@ using Combo.Items.Button;
 using Combo.Items.Slider;
 using Shared.Behaviours;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace Combo {
     /// <summary>
@@ -11,52 +12,75 @@ namespace Combo {
     /// </summary>
     public class Combo : HitMissItem {
         /// <summary>
-        /// Data of combo
+        /// Ordered collection of combo frames data
+        /// <seealso cref="ComboFrameData"/>
         /// </summary>
-        public ComboData comboData;
+        private ComboData comboData;
 
         /// <summary>
         /// Prefab of <see cref="ComboSlider"/>
         /// </summary>
-        public ComboSlider sliderPrefab;
+        private ComboSlider sliderPrefab;
 
         /// <summary>
         /// Prefab of <see cref="ComboButton"/>
         /// </summary>
-        public ComboButton buttonPrefab;
-        
+        private ComboButton buttonPrefab;
+
         private int currentFrameIndex;
         private float accumulatedAccuracy;
         private ComboFrame currentFrame;
 
+        /// <summary>
+        /// On start create new frame (not Awake to allow correct data setting in <see cref="Instantiate"/> factory)
+        /// </summary>
         private void Start() => NextFrame();
 
-        private void NextFrame() {
-            if (currentFrameIndex == comboData.Length) ItemHit(accumulatedAccuracy / comboData.Length);
-            else {
-                currentFrame = ComboFrame.Create(buttonPrefab, sliderPrefab, comboData[currentFrameIndex++], transform);
-                currentFrame.OnHit += accuracy => {
-                    accumulatedAccuracy += accuracy;
-                    NextFrame();
-                };
-                currentFrame.OnMissed += () => {
-                    ItemMissed();
-                    Destroy(gameObject);
-                };
-            }
-        }
-        
         /// <summary>
-        /// Factory method for combo frame 
+        /// Loops through combo frames and displays them sequentially
         /// </summary>
-        public static Combo Create(ComboSlider sliderPrefab, ComboButton buttonPrefab, ComboData comboData, Transform parent) {
+        private void NextFrame() {
+            if (currentFrameIndex == comboData.Length) {
+                OnHit(accumulatedAccuracy / comboData.Length);
+                return;
+            }
+
+            currentFrame = ComboFrame.Instantiate(buttonPrefab, sliderPrefab, comboData[currentFrameIndex++], transform);
+            currentFrame.Hit += (sender, accuracy) => {
+                accumulatedAccuracy += accuracy;
+                NextFrame();
+            };
+
+            currentFrame.Missed += (sender, args) => OnMissed();
+        }
+
+        public override bool OnMissed() {
+            if (shouldDestroy) return false;
+
+            shouldDestroy = true;
+
+            base.OnMissed();
+            if (currentFrame != null) currentFrame.OnMissed();
+
+            return true;
+        }
+
+        private bool shouldDestroy;
+        private void Update() {
+            if (shouldDestroy && currentFrame == null) Destroy(gameObject);
+        }
+
+        /// <summary>
+        /// Factory method to instantiate <see cref="Combo"/>
+        /// </summary>
+        public static Combo Instantiate(ComboSlider slider, ComboButton button, ComboData data, Transform parent) {
             var instance = new GameObject("Combo", typeof(RectTransform), typeof(Combo));
             instance.transform.SetParent(parent);
 
             var comboComponent = instance.GetComponent<Combo>();
-            comboComponent.sliderPrefab = sliderPrefab;
-            comboComponent.buttonPrefab = buttonPrefab;
-            comboComponent.comboData = comboData;
+            comboComponent.sliderPrefab = slider;
+            comboComponent.buttonPrefab = button;
+            comboComponent.comboData = data;
 
             return comboComponent;
         }

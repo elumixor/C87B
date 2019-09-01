@@ -18,5 +18,5 @@ MonoBehaviour:
     - {x: -0.5, y: 0.5}
     - {x: 0.5, y: -0.5}
     - {x: 1, y: 0}
-    spacing: 1
+    spacing: 49.6
     resolution: 1

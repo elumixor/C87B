@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$PROJECT_DIR$" t="IncludeRecursive">
-      <e p=".git/info/exclude" t="IncludeRecursive" />
+    <e p="C:\dev\unity\C87B" t="IncludeRecursive">
+      <e p=".git\info\exclude" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Character" t="Include">
           <e p="Ability" t="Include">
@@ -83,14 +83,19 @@
             <e p="Button" t="Include">
               <e p="ComboButton.cs" t="Include" />
               <e p="ComboButtonEditor.cs" t="Include" />
+              <e p="MarkerButton" t="Include">
+                <e p="Mark.cs" t="Include" />
+                <e p="MarkerButton.cs" t="Include" />
+              </e>
             </e>
             <e p="ComboItem.cs" t="Include" />
+            <e p="ComboItemEditor.cs" t="Include" />
             <e p="Designers" t="Include">
               <e p="ComboButtonDesigner.cs" t="Include" />
               <e p="ComboSliderDesigner.cs" t="Include" />
               <e p="Editors" t="Include">
                 <e p="ComboButtonDesignerEditor.cs" t="Include" />
-                <e p="ComboItemDataDesigner.cs" t="Include" />
+                <e p="ComboItemDesignerEditor.cs" t="Include" />
                 <e p="ComboSliderDesignerEditor.cs" t="Include" />
               </e>
             </e>
@@ -104,6 +109,7 @@
                 <e p="SliderArrow.cs" t="Include" />
               </e>
               <e p="ComboSlider.cs" t="Include" />
+              <e p="ComboSliderEditor.cs" t="Include" />
               <e p="Segment" t="Include">
                 <e p="SliderSegment.cs" t="Include" />
               </e>
@@ -150,11 +156,17 @@
         <e p="Shared" t="Include">
           <e p="AnimationBehaviours" t="Include">
             <e p="DestroyOnExit.cs" t="Include" />
+            <e p="IDestroyOnExitHandler.cs" t="Include" />
           </e>
           <e p="Behaviours" t="Include">
+            <e p="Animable" t="Include">
+              <e p="AnimableExtensions.cs" t="Include" />
+              <e p="IAnimable.cs" t="Include" />
+            </e>
             <e p="Designer.cs" t="Include" />
             <e p="FaceTransform.cs" t="Include" />
             <e p="HitMissItem.cs" t="Include" />
+            <e p="ISettingsChangeHandler.cs" t="Include" />
             <e p="Progressable" t="Include">
               <e p="CubicProgressable" t="Include">
                 <e p="CubicProgressable.cs" t="Include" />
@@ -210,9 +222,9 @@
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
       <e p="Shared.csproj" t="IncludeRecursive" />
-      <e p="Temp/bin" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
     </e>
-    <e p="$USER_HOME$/Library/Caches/Rider2019.2/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/Library/Caches/Rider2019.2/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_C87B.-922031289.00" t="ExcludeRecursive" />
+    <e p="C:\Users\vlado\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\vlado\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_C87B.-750795293.00" t="ExcludeRecursive" />
   </component>
 </project>

@@ -1,3 +1,4 @@
+using Combo.Items;
 using UnityEngine;
 
 namespace Combo.Frame.Types {
@@ -15,18 +16,18 @@ namespace Combo.Frame.Types {
         /// <summary>
         /// Handler for when slider has completed
         /// </summary>
-        protected override void HandleHit(float accuracy, int index) {
+        protected override void HandleHit(ComboItem item, float accuracy, int index) {
             if (hitCount == 0) firstHitTime = Time.time;
             else {
-                if (Time.time > firstHitTime + simultaneousToleranceTime) ItemMissed();
-                else base.HandleHit(accuracy, index);
+                if (Time.time > firstHitTime + simultaneousToleranceTime) OnMissed();
+                else base.HandleHit(item, accuracy, index);
             }   
         }
         protected override void Update() {
             base.Update();
             
             // we need to check that all items are finished simultaneously
-            if (hitCount > 0 && Time.time > firstHitTime + simultaneousToleranceTime && hitCount < items.Length) ItemMissed();
+            if (hitCount > 0 && Time.time > firstHitTime + simultaneousToleranceTime && hitCount < items.Count) OnMissed();
         }
     }
 }

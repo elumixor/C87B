@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Combo.DataContainers;
 using Combo.Frame.Types;
@@ -33,7 +34,7 @@ namespace Combo.Frame {
         /// <summary>
         /// References to created items components
         /// </summary>
-        protected ComboItem[] items;
+        protected List<ComboItem> items;
 
         /// <summary>
         /// Time, elapsed since frame creation. When it's bigger than <see cref="ComboFrameData.executionTime"/> frame is
@@ -62,7 +63,7 @@ namespace Combo.Frame {
                     var instance = (ComboButton) PrefabUtility.InstantiatePrefab(buttonPrefab, transform);
                     instance.transform.localPosition = buttonData.Position;
                     var rect = instance.GetComponent<RectTransform>().rect;
-                    instance.size = Mathf.Max(rect.width, rect.height) / buttonData.Size;
+//                    instance.size = Mathf.Max(rect.width, rect.height) / buttonData.Size;
                     return (ComboItem) instance;
                 } else {
                     var sliderData = (ComboSliderData) item;
@@ -70,13 +71,13 @@ namespace Combo.Frame {
                     instance.path = sliderData.path;
                     return (ComboItem) instance;
                 }
-            }).ToArray();
+            }).ToList();
 
-            for (var index = 0; index < items.Length; index++) {
-                var item = items[index];
-                var index1 = index;
-                item.OnHit += accuracy => HandleHit(accuracy, index1);
-                item.OnMissed += () => shouldDestroy = true;
+            for (var i = 0; i < items.Count; i++) {
+                var item = items[i];
+                var index = i;
+                item.Hit += (sender, accuracy) => HandleHit(item, accuracy, index);
+                item.Missed += (sender, args) => shouldDestroy = true;
             }
         }
 
@@ -85,63 +86,62 @@ namespace Combo.Frame {
                 if (items.All(i => i == null)) Destroy(gameObject);
             } else {
                 elapsed += Time.deltaTime;
-                if (elapsed >= frameData.executionTime) ItemMissed();
+                if (elapsed >= frameData.executionTime) OnMissed();
             }
         }
 
-        public override void ItemMissed() {
-            base.ItemMissed();
+        public override bool OnMissed() {
+            if (!base.OnMissed()) return false;
+            foreach (var item in items) item.OnMissed();
 
-            foreach (var item in items) {
-                item.ItemMissed();
-            }
-
-            shouldDestroy = true;
+            return shouldDestroy = true;
         }
 
-        protected virtual void HandleHit(float accuracy, int index) {
+        protected virtual void HandleHit(ComboItem item, float accuracy, int index) {
             accumulatedAccuracy += accuracy;
-            if (++hitCount == items.Length) ItemHit(accumulatedAccuracy / items.Length);
+            items.Remove(item);
+            if (items.Count == 0) OnHit(accumulatedAccuracy / items.Count);
         }
 
-        private static Type OfType(ComboFrameType frameType) {
-            switch (frameType) {
-                case ComboFrameType.Ordered:
-                    return typeof(OrderedFrame);
-                case ComboFrameType.SimultaneousButton:
-                    return typeof(SimultaneousButtonFrame);
-                case ComboFrameType.SimultaneousSlider:
-                    return typeof(SimultaneousSliderFrame);
-                default:
-                    return typeof(UnorderedFrame);
+        /// <summary>
+        /// Factory method to instantiate <see cref="ComboFrame"/>
+        /// </summary>
+        public static ComboFrame Instantiate(ComboButton button, ComboSlider slider, ComboFrameData data, Transform parent) {
+            Type ofType(ComboFrameType type) {
+                switch (type) {
+                    case ComboFrameType.Ordered:
+                        return typeof(OrderedFrame);
+                    case ComboFrameType.SimultaneousButton:
+                        return typeof(SimultaneousButtonFrame);
+                    case ComboFrameType.SimultaneousSlider:
+                        return typeof(SimultaneousSliderFrame);
+                    default:
+                        return typeof(UnorderedFrame);
+                }
             }
-        }
 
-        public static ComboFrame Create(ComboButton buttonPrefab, ComboSlider sliderPrefab, ComboFrameData comboFrameData,
-            Transform parent) {
-            
-            var frameType = OfType(comboFrameData.frameType);
+            var frameType = ofType(data.frameType);
 
-            var instance = new GameObject("Combo Frame", typeof(RectTransform));
+            var instance = new GameObject("Combo Frame", typeof(RectTransform), frameType);
 
             instance.transform.SetParent(parent);
 
-            var comboFrameComponent = (ComboFrame)instance.AddComponent(frameType);
+            var comboFrameComponent = (ComboFrame) instance.GetComponent(frameType);
 
-            comboFrameComponent.frameData = comboFrameData;
-            comboFrameComponent.sliderPrefab = sliderPrefab;
-            comboFrameComponent.buttonPrefab = buttonPrefab;
+            comboFrameComponent.frameData = data;
+            comboFrameComponent.sliderPrefab = slider;
+            comboFrameComponent.buttonPrefab = button;
 
-            var (_, comboFrame, _, comboButtons, comboSliders) = Helper.Directories;
-
-            if (!comboFrameData.IsSavedFile()) comboFrameData.SaveNew(comboFrame, "Combo Frame");
-
-            foreach (var comboItemData in comboFrameData.items.Where(item => !item.IsSavedFile())) {
-                if (comboItemData is ComboButtonData)
-                    comboItemData.SaveNew(comboButtons, "Combo Button");
-                else
-                    comboItemData.SaveNew(comboSliders, "Combo Slider");
-            }
+            // should be asserted somewhere before this
+//            var (_, comboFrame, _, comboButtons, comboSliders) = Helper.Directories;
+//            if (!data.IsSavedFile()) data.SaveNew(comboFrame, "Combo Frame");
+//
+//            foreach (var comboItemData in data.items.Where(item => !item.IsSavedFile())) {
+//                if (comboItemData is ComboButtonData)
+//                    comboItemData.SaveNew(comboButtons, "Combo Button");
+//                else
+//                    comboItemData.SaveNew(comboSliders, "Combo Slider");
+//            }
 
             return comboFrameComponent;
         }

@@ -1,17 +1,22 @@
 using Combo.DataContainers;
 using Shared.Behaviours;
-using UnityEngine;
+using UnityEditor;
 
 namespace Combo.Items.Designers.Editors {
     public abstract class ComboItemDesignerEditor<T> : DesignerEditor<T> where T : ComboItemData {
+        protected override void OnEnable() {
+            base.OnEnable();
+            Tools.hidden = true;
+        }
         protected override void OnSceneGUI() {
-            var position = designer.transform.position;
-            itemData.Position += (Vector2) position;
             onSceneGUI();
-            itemData.Position -= (Vector2) position;
             Repaint();
         }
-        
+
         protected override string FileName { get; } = "Combo Item";
+
+        protected virtual void OnDisable() {
+            Tools.hidden = false;
+        }
     }
 }

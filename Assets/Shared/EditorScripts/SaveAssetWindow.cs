@@ -21,6 +21,7 @@ namespace Shared.EditorScripts {
             if (evt.keyCode == KeyCode.Escape) Close();
             if (evt.keyCode == KeyCode.Return) {
                 scriptableObject.SaveNew(dir, name);
+                OnSaved?.Invoke(scriptableObject);
                 Close();
             }
         }
@@ -29,7 +30,7 @@ namespace Shared.EditorScripts {
             Close();
         }
 
-        public static void Init(ScriptableObject @object, string directory, string suggestedName) {
+        public static SaveAssetWindow Init(ScriptableObject @object, string directory, string suggestedName) {
             var window = CreateInstance<SaveAssetWindow>();
             window.position = new Rect(Screen.width / 2f, Screen.height / 2f, 250, 100);
             window.dir = directory;
@@ -37,6 +38,9 @@ namespace Shared.EditorScripts {
             window.scriptableObject = @object;
             window.ShowPopup();
             window.Focus();
+            return window;
         }
+
+        public event Action<ScriptableObject> OnSaved;
     }
 }

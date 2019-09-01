@@ -33,6 +33,8 @@ ExportedObj/
 *.suo
 *.tmp
 *.user
+*.sln
+*.csproj
 *.userprefs
 *.pidb
 *.booproj

@@ -3,6 +3,7 @@ using Character.Ability.Effects;
 using Character.Targeting;
 using Scenes.FightScene.SpecializedParts;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine;
 
 namespace Scenes.FightScene.Characters {
     /// <summary>
@@ -15,11 +16,11 @@ namespace Scenes.FightScene.Characters {
             .Sum();
 
         public override void ReceiveDamage(float damage) {
-            throw new System.NotImplementedException();
+            Debug.Log($"{name} received damage of: {damage}");
         }
 
         public override void ReceiveHeal(float heal) {
-            throw new System.NotImplementedException();
+            Debug.Log($"{name} received heal of: {heal}");
         }
     }
 }

@@ -7,11 +7,7 @@ namespace Combo.Items.Slider.Arrow {
         /// <summary>
         /// Animator component reference
         /// </summary>
-        [SerializeField] private Animator animator;
-        /// <summary>
-        /// Animation Detail for this segment
-        /// </summary>
-        public ComboItem.AnimationDetail animationDetail;
+        [SerializeField] public Animator animator;
 
         private static readonly int IsDragging = Animator.StringToHash("IsDragging");
 
@@ -20,7 +16,6 @@ namespace Combo.Items.Slider.Arrow {
         /// </summary>
         private void OnValidate() {
             animator = GetComponent<Animator>();
-            animationDetail = new ComboItem.AnimationDetail(animator);
         }
 
         public void OnPointerDown(PointerEventData eventData) {

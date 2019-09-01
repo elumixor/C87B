@@ -2,17 +2,19 @@ using System;
 using Combo.DataContainers;
 using Combo.Items.Button;
 using Combo.Items.Slider;
+using JetBrains.Annotations;
 using Shared;
 using Shared.PropertyDrawers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Combo {
     /// <summary>
     /// Combo Manager is responsible for displaying and handling <see cref="Combo"/>
     /// </summary>
-    [RequireComponent(typeof(Canvas)), RequireComponent(typeof(Image))]
-    public class ComboManager : MonoBehaviour {
+    [RequireComponent(typeof(Canvas), typeof(GraphicRaycaster), typeof(Image))]
+    public class ComboManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
         /// <summary>
         /// Execution canvas
         /// </summary>
@@ -46,20 +48,40 @@ namespace Combo {
             background.SetColorAlpha(0f);
         }
 
+        private Combo comboInstance;
+
         /// <summary>
         /// Instantiates 
         /// </summary>
         public void BeginCombo(ComboData comboData, Action<float> onSuccess, Action onFail) {
+            BlocksRaycasts = isCombo = true;
             background.SetColorAlpha(1f); // todo: gradually / animate
-            var comboInstance = Combo.Create(sliderPrefab, buttonPrefab, comboData, executionCanvas.transform);
-            comboInstance.OnHit += accuracy => {
+            comboInstance = Combo.Instantiate(sliderPrefab, buttonPrefab, comboData, executionCanvas.transform);
+            comboInstance.Hit += (sender, accuracy) => {
                 background.SetColorAlpha(0f);
                 onSuccess(accuracy);
+                BlocksRaycasts = isCombo = false;
+                pointerDownWillTriggerFail = false;
             };
-            comboInstance.OnMissed += () => {
+            comboInstance.Missed += (sender, args) => {
                 background.SetColorAlpha(0f);
                 onFail();
+                BlocksRaycasts = isCombo = false;
+                pointerDownWillTriggerFail = false;
             };
+        }
+
+        public static bool BlocksRaycasts { get; private set; } = false;
+
+        private bool pointerDownWillTriggerFail;
+        private bool isCombo;
+
+        public void OnPointerDown(PointerEventData eventData) {
+            if (pointerDownWillTriggerFail && comboInstance != null) comboInstance.OnMissed();
+            pointerDownWillTriggerFail = false;
+        }
+        public void OnPointerUp(PointerEventData eventData) {
+            if (isCombo) pointerDownWillTriggerFail = true;
         }
     }
 }

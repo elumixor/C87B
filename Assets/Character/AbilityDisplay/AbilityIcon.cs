@@ -11,14 +11,19 @@ namespace Character.AbilityDisplay {
         public ComboManager comboManager;
         public Targeter targeter;
 
-        public void OnMouseDown() => comboManager.BeginCombo(ability.ComboData, OnSuccess, OnFail);
+        public void OnMouseDown() {
+            if (!ComboManager.BlocksRaycasts) comboManager.BeginCombo(ability.ComboData, OnSuccess, OnFail);
+        }
 
         private void OnSuccess(float accuracy) {
+            Debug.Log("success");
             foreach (var (effect, targetType) in ability.effects) {
                 effect.ApplyTo(targeter[targetType], accuracy);
             }
         }
 
-        private void OnFail() { }
+        private void OnFail() {
+            Debug.Log("failed");
+        }
     }
 }

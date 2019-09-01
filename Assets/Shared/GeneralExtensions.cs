@@ -5,10 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
+using Shared.Behaviours;
 using Shared.EditorScripts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Shared {
     public static class GeneralExtensions {
@@ -28,6 +30,7 @@ namespace Shared {
             if ((memberInfo.MemberType & MemberTypes.Field) != 0) return ((FieldInfo) memberInfo).FieldType;
             if ((memberInfo.MemberType & MemberTypes.Property) != 0) return ((PropertyInfo) memberInfo).PropertyType;
             if ((memberInfo.MemberType & MemberTypes.Method) != 0) return ((MethodInfo) memberInfo).ReturnType;
+
             throw new ArgumentException("Member should be a field, property or method");
         }
 
@@ -49,6 +52,7 @@ namespace Shared {
             while (childType != null && childType != typeof(object)) {
                 var cur = childType.IsGenericType ? childType.GetGenericTypeDefinition() : childType;
                 if (baseType == cur) return true;
+
                 childType = childType.BaseType;
             }
 
@@ -87,9 +91,10 @@ namespace Shared {
             return name;
         }
 
-        public static void SaveDialog(this ScriptableObject scriptableObject, string directoryName, string fileName) =>
+
+        public static SaveAssetWindow SaveDialog(this ScriptableObject scriptableObject, string directoryName, string fileName) =>
             SaveAssetWindow.Init(scriptableObject, directoryName, fileName);
-        
+
         /// <summary>
         /// Retrieves selected folder on Project view.
         /// </summary>
@@ -119,7 +124,12 @@ namespace Shared {
             color.a = alpha;
             return color;
         }
-        
+
         public static void SetColorAlpha(this Image image, float alpha) => image.color = image.color.SetAlpha(alpha);
+
+        public static void UpdateUsages<TSettings>(this TSettings scriptableObject) where TSettings : ScriptableObject {
+            foreach (var handler in Object.FindObjectsOfType<Component>().OfType<ISettingsChangeHandler<TSettings>>())
+                handler.OnSettingsChanged();
+        }
     }
 }

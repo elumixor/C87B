@@ -27,11 +27,7 @@ namespace Combo.Items.Slider.Segment {
         /// <summary>
         /// Animator component reference
         /// </summary>
-        [SerializeField] private Animator animator;
-        /// <summary>
-        /// Animation Detail for this segment
-        /// </summary>
-        public ComboItem.AnimationDetail animationDetail;
+        [SerializeField] public Animator animator;
 
         /// <summary>
         /// Assign components on script change
@@ -39,7 +35,6 @@ namespace Combo.Items.Slider.Segment {
         private void OnValidate() {
             image = GetComponent<SVGImage>();
             animator = GetComponent<Animator>();
-            animationDetail = new ComboItem.AnimationDetail(animator);
         }
         /// <summary>
         /// Reflect script variables change

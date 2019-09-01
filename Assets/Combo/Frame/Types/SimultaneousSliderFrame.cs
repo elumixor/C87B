@@ -25,14 +25,14 @@ namespace Combo.Frame.Types {
         /// </summary>
         private void HandleStart() {
             if (startedCount++ == 0) firstStartTime = Time.time;
-            else if (Time.time > firstStartTime + simultaneousToleranceTime) ItemMissed();
+            else if (Time.time > firstStartTime + simultaneousToleranceTime) OnMissed();
         }
 
         protected override void Update() {
             base.Update();
 
             // we need to check that all items are started simultaneously
-            if (startedCount > 0 && Time.time > firstStartTime + simultaneousToleranceTime && startedCount < items.Length) ItemMissed();
+            if (startedCount > 0 && Time.time > firstStartTime + simultaneousToleranceTime && startedCount < items.Count) OnMissed();
         }
     }
 }

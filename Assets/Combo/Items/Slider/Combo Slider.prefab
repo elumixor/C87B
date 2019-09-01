@@ -48,7 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c1b30e4634a471baf51768b4c8dc7f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 0
   accent: {r: 1, g: 1, b: 1, a: 1}
   path:
     points:
@@ -60,7 +59,7 @@ MonoBehaviour:
     resolution: 1
   segmentObject: {fileID: 2254123096016175090, guid: 0ee58f253dc467c42aa3d619d691356f,
     type: 3}
-  sliderArrow: {fileID: 7136299333472547781, guid: 0c37478dcca774043afa22e2876913a2,
+  sliderArrow: {fileID: 5647286740714577525, guid: 0c37478dcca774043afa22e2876913a2,
     type: 3}
   maxDiffDistance: 38.7
   segmentComponent: {fileID: -5903828830299203714, guid: 0ee58f253dc467c42aa3d619d691356f,
