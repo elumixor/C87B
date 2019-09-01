@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Shared.PropertyDrawers;
 using UnityEngine;
-using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 namespace Combo.Items.Button.MarkerButton {
     /// <summary>
@@ -12,14 +15,19 @@ namespace Combo.Items.Button.MarkerButton {
         /// Reference to container of transform containers (root of containers)
         /// </summary>
         [SerializeField]
-        private Transform markersContainer;
+        private RectTransform markersContainer;
+
+        [SerializeField, Required]
+        private Sprite markerImage;
+
+        [Range(0, 10), SerializeField]
+        private int markersCount;
 
         /// <summary>
         /// Distance of mark from center
         /// </summary>
-        [Header("Marks settings")]
-        [SerializeField, Range(0, 5)]
-        private float markDistance;
+        [SerializeField, Range(0, 2)]
+        private float markerDistance;
 
         /// <summary>
         /// Rotation of all marks with origin in object's center (rotation of containers)
@@ -30,83 +38,84 @@ namespace Combo.Items.Button.MarkerButton {
         /// <summary>
         /// Individual marks rotation
         /// </summary>
-        [Header("Individual mark settings")]
         [SerializeField, Range(-180, 180)]
-        private float markRotation;
+        private float markerRotation;
 
         /// <summary>
         /// Size of mark
         /// </summary>
-        [SerializeField, Range(0f, 1f)]
-        private float markSize;
+        [SerializeField, Range(0, 2)]
+        private float markerSize;
+
+        [SerializeField]
+        private Color accent;
 
         /// <summary>
         /// List of references to marks
         /// </summary>
-        [HideInInspector, SerializeField]
-        private List<Mark> marks;
+        [SerializeField]
+        public List<(RectTransform container, RectTransform mark, SVGImage svg)> markers;
 
-        /// <summary>
-        /// Marks count
-        /// </summary>
-        public int MarksCount => marks?.Count ?? 0;
+        private void Update() {
+            if (markersContainer == null || markers == null || markersCount == 0) return;
 
-        private float size;
-
-        /// <summary>
-        /// Updates view to reflect changes in script variables (e.g. used in animation)
-        /// </summary>
-        private void UpdateView() {
-            transform.localScale = new Vector2(size, size);
-
-            var angleBetweenMarks = 360 / marks.Count;
-            for (var index = 0; index < marks.Count; index++) {
-                var mark = marks[index];
+            var angleBetweenMarks = 360 / markersCount;
+            for (var index = 0; index < markersCount; index++) {
+                var (container, mark, svg) = markers[index];
                 var angle = angleBetweenMarks * index + offsetAngle;
-                SetMarkContainer(mark.container, angle);
-                SetMark(mark.mark, mark.svg);
+
+                container.localRotation = Quaternion.Euler(0f, 0f, angle);
+                container.localPosition = Vector3.zero;
+                container.localScale = Vector3.one;
+                container.sizeDelta = Vector2.one;
+
+                mark.localPosition = new Vector3(0, markerDistance, 0);
+                mark.localRotation = Quaternion.Euler(0, 0, markerRotation);
+                mark.localScale = Vector2.one * markerSize;
+                mark.sizeDelta = Vector2.one;
+
+                svg.color = accent;
             }
         }
 
-
-        /// <summary>
-        /// Sets correct mark container transform
-        /// </summary>
-        /// <param name="container">Container's transform reference</param>
-        /// <param name="angle">Container's clockwise rotation angle</param>
-        private static void SetMarkContainer(RectTransform container, float angle) {
-            container.localRotation = Quaternion.Euler(0f, 0f, angle);
-            container.localPosition = Vector3.zero;
-            container.localScale = Vector3.one;
-            container.sizeDelta = Vector2.one;
+        private void Start() {
+            if (markers == null) FindMarkers();
         }
 
-        /// <summary>
-        /// Setts correct local mark transform and svg color
-        /// </summary>
-        /// <param name="mark">Mark's transform reference</param>
-        /// <param name="svg">Mark's svg component</param>
-        private void SetMark(RectTransform mark, Graphic svg) {
-            mark.localPosition = new Vector3(0, markDistance, 0);
-            mark.localRotation = Quaternion.Euler(0, 0, markRotation);
-            mark.localScale = Vector2.one * markSize;
-            mark.sizeDelta = Vector2.one;
-        }
-
-        /// <summary>
-        /// Populates <see cref="marks"/> with valid references to children, does not create or modify child
-        /// game objects or transforms.
-        /// </summary>
-        public void PopulateMarksList() {
-            marks = new List<Mark>(markersContainer.childCount);
-
+        [Conditional("UNITY_EDITOR")]
+        public void FindMarkers() {
+            markers = new List<(RectTransform container, RectTransform mark, SVGImage svg)>(markersContainer.childCount);
             foreach (Transform markContainer in markersContainer) {
                 var mark = markContainer.GetChild(0);
-                marks.Add(new Mark {
-                    container = markContainer.GetComponent<RectTransform>(),
-                    mark = mark.GetComponent<RectTransform>(),
-                    svg = mark.GetComponent<SVGImage>()
-                });
+                markers.Add((markContainer.GetComponent<RectTransform>(),
+                    mark.GetComponent<RectTransform>(),
+                    mark.GetComponent<SVGImage>()));
+            }
+        }
+
+        public void CreateMarkers() {
+            if (markersContainer == null)
+                markersContainer = new GameObject("Markers Container", typeof(RectTransform)).GetComponent<RectTransform>();
+
+            markersContainer.SetParent(transform);
+
+            markersContainer.sizeDelta = Vector2.one;
+            markersContainer.localPosition = Vector3.zero;
+            markersContainer.localScale = Vector3.one;
+
+            markers = new List<(RectTransform container, RectTransform mark, SVGImage svg)>(markersContainer.childCount);
+
+            for (var i = 0; i < markersCount; i++) {
+                var container = new GameObject($"Mark {i}", typeof(RectTransform)).GetComponent<RectTransform>();
+                container.SetParent(markersContainer);
+
+                var mark = new GameObject("Mark", typeof(RectTransform), typeof(SVGImage)).GetComponent<RectTransform>();
+                mark.SetParent(container);
+
+                var svg = mark.GetComponent<SVGImage>();
+                svg.sprite = markerImage;
+
+                markers.Add((container, mark, svg));
             }
         }
     }

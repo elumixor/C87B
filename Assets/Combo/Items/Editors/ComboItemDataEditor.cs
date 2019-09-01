@@ -12,8 +12,6 @@ namespace Combo.Items.Editors {
         public Vector2 offset;
 
         protected virtual void OnEnable() {
-            Debug.Log(target);
-            Debug.Log(target.GetType());
             itemData = (T) target;
             var c = FindObjectOfType<Canvas>();
             if (c != null) {

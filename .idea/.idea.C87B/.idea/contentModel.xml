@@ -84,8 +84,8 @@
               <e p="ComboButton.cs" t="Include" />
               <e p="ComboButtonEditor.cs" t="Include" />
               <e p="MarkerButton" t="Include">
-                <e p="Mark.cs" t="Include" />
                 <e p="MarkerButton.cs" t="Include" />
+                <e p="MarkerButtonEditor.cs" t="Include" />
               </e>
             </e>
             <e p="ComboItem.cs" t="Include" />
