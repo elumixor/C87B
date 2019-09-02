@@ -131,5 +131,24 @@ namespace Shared {
             foreach (var handler in Object.FindObjectsOfType<Component>().OfType<ISettingsChangeHandler<TSettings>>())
                 handler.OnSettingsChanged();
         }
+
+        public static void EnableCanvasOffset(ref RectTransform canvas, out Vector2 offset) {
+            var c = Object.FindObjectOfType<Canvas>();
+            if (c != null) {
+                canvas = c.GetComponent<RectTransform>();
+                var rect = canvas.rect;
+                offset = new Vector2(rect.width * .5f, rect.height * .5f);
+            } else offset = Vector2.zero;
+        }
+        public static void OnInspectorCanvasOffset(ref RectTransform canvas, ref Vector2 offset) {
+            var newCanvas = (RectTransform) EditorGUILayout.ObjectField("Canvas", canvas, typeof(RectTransform), true);
+            if (newCanvas != canvas) {
+                canvas = newCanvas;
+                if (canvas != null) {
+                    var rect = canvas.rect;
+                    offset = new Vector2(rect.width * .5f, rect.height * .5f);
+                } else offset = Vector2.zero;
+            }
+        }
     }
 }

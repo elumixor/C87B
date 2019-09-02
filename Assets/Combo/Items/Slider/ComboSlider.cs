@@ -1,18 +1,24 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Combo.DataContainers;
+using JetBrains.Annotations;
 using Shared.Behaviours.Animable;
-using Shared.EditorScripts;
+using Shared.Path;
 using Shared.Path.PathDrag;
-using UnityEditor;
+using Shared.PropertyDrawers;
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace Combo.Items.Slider {
     [DisallowMultipleComponent]
     public class ComboSlider : ComboItem<ComboSliderData> {
-        [SerializeField] private SVGImage arrowImage;
-        [SerializeField] private SVGImage segmentImage;
+        [SerializeField] private Sprite arrowImage;
+        [SerializeField] private Sprite segmentImage;
+
+        [Range(0, 100)] public float arrowSize;
+        [Range(0, 100)] public float segmentSize;
+
+        [SerializeField, Required] private AnimatorController arrowAnimationController;
+        [SerializeField, Required] private AnimatorController segmentsAnimationController;
 
         /// <summary>
         /// Maximum distance from position of <see cref="arrow"/> to actual path
@@ -34,15 +40,10 @@ namespace Combo.Items.Slider {
         /// </summary>
         private float accumulatedAccuracy;
 
-//        /// <summary>
-//        /// Assign components and <see cref="accuracyThreshold"/> on script change
-//        /// </summary>
-//        private void OnValidate() {
-//            if (arrow != null) arrow.accuracyThreshold = accuracyThreshold;
-//        }
-
-        private void Update() {
-//            if (shouldDestroy && segments.All(i => i == null) && sliderArrowInstance == null) Destroy(gameObject);
+        [CanBeNull]
+        public Path2D Path {
+            [Pure]
+            get => Settings != null ? Settings.path : null;
         }
 
         /// <summary>
@@ -53,21 +54,29 @@ namespace Combo.Items.Slider {
             if (settings == null) return;
 
             var arrowInstance = new GameObject("Slider Arrow", typeof(SliderArrow));
-            arrowInstance.transform.SetParent(transform);
+            var arrowTransform = arrowInstance.GetComponent<RectTransform>();
+
+            arrowTransform.SetParent(transform);
+            arrowTransform.localScale = Vector3.one * arrowSize;
+            arrowTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1);
+            arrowTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 1);
+
             arrow = arrowInstance.GetComponent<SliderArrow>();
-            arrow.image = arrowImage;
+            arrow.image.sprite = arrowImage;
+            arrow.animationDraggable.Animator.runtimeAnimatorController = arrowAnimationController;
 
             var evenlySpacedPoints = settings.path.EvenlySpacedPoints();
 
             var pathDraggable = arrow.pathDraggable;
             pathDraggable.path = settings.path;
+            pathDraggable.evenlySpacedPoints = evenlySpacedPoints;
             pathDraggable.dragDirection = PathDraggable.DragDirection.OnlyForward;
             pathDraggable.startPointIndex = 0;
             pathDraggable.accuracyThreshold = accuracyThreshold;
 
             pathDraggable.OnDragProgress += (accuracy, index, total) => {
                 accumulatedAccuracy += accuracy;
-                segments[index].AnimateHit();
+                segments[index - 1].AnimateHit();
             };
 
             pathDraggable.OnDragStopped += (completed, index, total) => {
@@ -75,15 +84,34 @@ namespace Combo.Items.Slider {
                 else OnMissed();
             };
 
+            pathDraggable.UpdatePosition();
+            pathDraggable.UpdateRotation();
+
+
             // Coroutine to create segments
             IEnumerator createSegments() {
+                var segmentScale = Vector3.one * segmentSize;
                 segments = new SliderSegment[evenlySpacedPoints.Count - 1];
 
                 for (var i = 1; i < evenlySpacedPoints.Count; i++) {
                     var segmentInstance = new GameObject($"Segment {i}", typeof(SliderSegment));
-                    segmentInstance.transform.SetParent(transform);
-                    segments[i - 1] = segmentInstance.GetComponent<SliderSegment>();
-                    segments[i - 1].transform.localPosition = evenlySpacedPoints[i];
+
+                    var segment = segmentInstance.GetComponent<SliderSegment>();
+                    var segmentTransform = segment.GetComponent<RectTransform>();
+
+                    segmentTransform.SetParent(transform);
+
+                    segmentTransform.localPosition = evenlySpacedPoints[i];
+                    segmentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1);
+                    segmentTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 1);
+                    segmentTransform.localScale = segmentScale;
+                    segmentTransform.SetAsFirstSibling();
+
+                    segment.image.sprite = segmentImage;
+
+                    segment.Animator.runtimeAnimatorController = segmentsAnimationController;
+
+                    segments[i - 1] = segment;
                     yield return null;
                 }
             }

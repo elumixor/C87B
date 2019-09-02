@@ -96,7 +96,10 @@ namespace Combo.Items {
         /// <summary>
         /// Protected getter for <see cref="settings"/> to access in <see cref="OnSettingsChanged"/>
         /// </summary>
-        public TItemData Settings => settings;
+        public TItemData Settings {
+            [Pure]
+            get => settings;
+        }
 
         /// <summary>
         /// Adjust parameters when <see cref="settings"/> has changed

@@ -15,24 +15,13 @@ namespace Shared.Path.PathDrag {
 
         private void OnEnable() {
             pathDraggable = (PathDraggable) target;
-            var c = FindObjectOfType<Canvas>();
-            if (c != null) {
-                canvas = c.GetComponent<RectTransform>();
-                var rect = canvas.rect;
-                offset = new Vector2(rect.width * .5f, rect.height * .5f);
-            } else offset = Vector2.zero;
+
+            GeneralExtensions.EnableCanvasOffset(ref canvas, out offset);
             pathDraggable.SetEvenlySpacedPoints(evenlySpacedPoints = pathDraggable.path.EvenlySpacedPoints());
         }
 
         public override void OnInspectorGUI() {
-            var newCanvas = (RectTransform) EditorGUILayout.ObjectField("Canvas", canvas, typeof(RectTransform), true);
-            if (newCanvas != canvas) {
-                canvas = newCanvas;
-                if (canvas != null) {
-                    var rect = canvas.rect;
-                    offset = new Vector2(rect.width * .5f, rect.height * .5f);
-                } else offset = Vector2.zero;
-            }
+            GeneralExtensions.OnInspectorCanvasOffset(ref canvas, ref offset);
 
             var newPath = pathDraggable.path.OnInspectorGUI();
 
@@ -43,8 +32,8 @@ namespace Shared.Path.PathDrag {
             pathDraggable.startPointIndex = EditorGUILayout.IntSlider("Start point index", pathDraggable.startPointIndex,
                 0, evenlySpacedPoints.Count - 1);
 
-            pathDraggable.SetPosition();
-            pathDraggable.SetRotationEditor();
+            pathDraggable.UpdatePosition();
+            pathDraggable.UpdateRotation();
 
             if (newPath != pathDraggable.path) pathDraggable.SetEvenlySpacedPoints(evenlySpacedPoints = newPath.EvenlySpacedPoints());
             pathDraggable.path = newPath;
@@ -59,10 +48,7 @@ namespace Shared.Path.PathDrag {
             pathDraggable.path = newPath;
 
             var e = Event.current;
-            if (e.alt) {
-                Debug.Log("drawing");
-                pathDraggable.path.DrawEvenlySpacedPoints(evenlySpacedPoints, offset);
-            }
+            if (e.alt) pathDraggable.path.DrawEvenlySpacedPoints(evenlySpacedPoints, offset);
 
             // Bezier's width is relative to screen's zoom, making this not useful
 //            if (pathDraggable.accuracyThreshold > 0) {

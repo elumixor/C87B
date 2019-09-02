@@ -10,11 +10,11 @@ namespace Combo.Items.Slider {
         public SVGImage image;
         public Animator Animator => animator;
 
-
-        private void Reset() {
+        private void Awake() {
             animator = GetComponent<Animator>();
             image = GetComponent<SVGImage>();
         }
+        private void Reset() => Awake();
 
         public event EventHandler Destroyed;
         public void OnDestroyedOnExit() => Destroyed?.Invoke(this, EventArgs.Empty);

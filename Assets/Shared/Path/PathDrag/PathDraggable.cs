@@ -30,7 +30,7 @@ namespace Shared.Path.PathDrag {
         /// <summary>
         /// Storage for generated evenly spaced points
         /// </summary>
-        [SerializeField] private List<Vector2> evenlySpacedPoints;
+        public List<Vector2> evenlySpacedPoints;
 
         private bool isDragging;
         private Vector2 dragOffset;
@@ -89,8 +89,9 @@ namespace Shared.Path.PathDrag {
                     return;
             }
 
-            transform.localPosition = evenlySpacedPoints[startPointIndex = index];
-            SetRotation();
+            startPointIndex = index;
+            UpdatePosition();
+            UpdateRotation();
             OnDragProgress?.Invoke(accuracy, startPointIndex, evenlySpacedPoints.Count);
 
             // todo: works only if dragDirection = forward
@@ -101,7 +102,7 @@ namespace Shared.Path.PathDrag {
         /// Rotates towards next point in <see cref="evenlySpacedPoints"/>, or previous if
         /// <see cref="dragDirection"/> is <see cref="DragDirection.OnlyBackward"/>
         /// </summary>
-        private void SetRotation() {
+        public void UpdateRotation() {
             var start = evenlySpacedPoints[startPointIndex];
             var isFirst = startPointIndex == 0;
             var isLast = startPointIndex == evenlySpacedPoints.Count - 1;
@@ -125,27 +126,17 @@ namespace Shared.Path.PathDrag {
             }
         }
 
+        public void UpdatePosition() {
+            transform.localPosition = evenlySpacedPoints[startPointIndex];
+        }
+
         [Conditional("UNITY_EDITOR")]
         public void SetEvenlySpacedPoints(List<Vector2> points) {
             if (EditorApplication.isPlaying) return;
 
             evenlySpacedPoints = points;
-            SetPosition();
-            SetRotation();
-        }
-
-        [Conditional("UNITY_EDITOR")]
-        public void SetPosition() {
-            if (EditorApplication.isPlaying) return;
-
-            transform.localPosition = evenlySpacedPoints[startPointIndex];
-        }
-
-        [Conditional("UNITY_EDITOR")]
-        public void SetRotationEditor() {
-            if (EditorApplication.isPlaying) return;
-
-            SetRotation();
+            UpdatePosition();
+            UpdateRotation();
         }
     }
 }

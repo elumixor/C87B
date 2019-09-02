@@ -117,7 +117,7 @@ namespace Shared.Path {
 
         public static void DrawEvenlySpacedPoints(this Path2D path) =>
             path.DrawEvenlySpacedPoints(path.EvenlySpacedPoints());
-        public static void DrawEvenlySpacedPoints(this Path2D path, List<Vector2> points) =>
+        public static void DrawEvenlySpacedPoints(this Path2D path, IEnumerable<Vector2> points) =>
             path.DrawEvenlySpacedPoints(points, Vector2.zero);
         public static void DrawEvenlySpacedPoints(this Path2D path, Vector2 offset) =>
             path.DrawEvenlySpacedPoints(path.EvenlySpacedPoints(), offset);

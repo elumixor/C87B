@@ -1,4 +1,5 @@
-﻿using Shared.Behaviours.Animable;
+﻿using System;
+using Shared.Behaviours.Animable;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,20 +13,15 @@ namespace Shared.Path.PathDrag {
         private Animator animator;
         public Animator Animator => animator;
 
+        private void Awake() => animator = GetComponent<Animator>();
+
         private static readonly int IsDragging = Animator.StringToHash("IsDragging");
 
         /// <summary>
         /// Assign animator component
         /// </summary>
-        private void Reset() {
-            animator = GetComponent<Animator>();
-        }
-
-        public void OnPointerDown(PointerEventData eventData) {
-            animator.SetBool(IsDragging, true);
-        }
-        public void OnPointerUp(PointerEventData eventData) {
-            animator.SetBool(IsDragging, false);
-        }
+        private void Reset() => animator = GetComponent<Animator>();
+        public void OnPointerDown(PointerEventData eventData) => animator.SetBool(IsDragging, true);
+        public void OnPointerUp(PointerEventData eventData) => animator.SetBool(IsDragging, false);
     }
 }
