@@ -179,8 +179,9 @@ namespace Shared.Path {
         }
 
         /// <summary>
-        /// Interpolates evenly spaced points on the path
+        /// Interpolates evenly spaced points on the path (costly)
         /// </summary>
+        [Pure]
         public List<Vector2> EvenlySpacedPoints() {
             if (spacing <= 0f || resolution <= 0f)
                 throw new ArgumentException($"Spacing ({spacing}) and resolution ({resolution}) should be greater than zero.");

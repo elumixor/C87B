@@ -122,7 +122,7 @@ namespace Shared.Path {
         public static void DrawEvenlySpacedPoints(this Path2D path, Vector2 offset) =>
             path.DrawEvenlySpacedPoints(path.EvenlySpacedPoints(), offset);
         public static void DrawEvenlySpacedPoints(this Path2D path, IEnumerable<Vector2> points, Vector2 offset) {
-            foreach (var point in points) Handles.DrawSolidArc(point + offset, Vector3.forward, Vector3.up, 360, 2f);
+            foreach (var point in points) Handles.DrawSolidDisc(point + offset, Vector3.forward, 2f);
         }
     }
 }
