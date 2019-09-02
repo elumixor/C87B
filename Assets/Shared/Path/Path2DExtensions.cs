@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -5,7 +6,8 @@ namespace Shared.Path {
     public static class Path2DExtensions {
         private const float MinSize = 0.001f;
 
-        public static Path2D OnInspectorGUI(this Path2D path, Object recordObject = null) => path.OnInspectorGUI(Vector2.zero, recordObject);
+        public static Path2D OnInspectorGUI(this Path2D path, Object recordObject = null) =>
+            path.OnInspectorGUI(Vector2.zero, recordObject);
         public static Path2D OnInspectorGUI(this Path2D path, Vector2 offset, Object recordObject = null) {
             path += offset;
 
@@ -42,7 +44,7 @@ namespace Shared.Path {
                 var oldStartTangent = path.StartTangent;
                 var newStartTangent = EditorGUILayout.Vector2Field("Start tangent", oldStartTangent);
                 if (newStartTangent != oldStartTangent) {
-                    if (recordObject != null)  Undo.RecordObject(recordObject, "Change start tangent");
+                    if (recordObject != null) Undo.RecordObject(recordObject, "Change start tangent");
                     path.StartTangent = newStartTangent;
                 }
 
@@ -66,7 +68,6 @@ namespace Shared.Path {
             return path;
         }
         public static Path2D OnSceneGUI(this Path2D path, Object recordObject = null) => path.OnSceneGUI(Vector2.zero, recordObject);
-
         public static Path2D OnSceneGUI(this Path2D path, Vector2 offset, Object recordObject = null) {
             path += offset;
 
@@ -112,6 +113,16 @@ namespace Shared.Path {
 
             path -= offset;
             return path;
+        }
+
+        public static void DrawEvenlySpacedPoints(this Path2D path) =>
+            path.DrawEvenlySpacedPoints(path.EvenlySpacedPoints());
+        public static void DrawEvenlySpacedPoints(this Path2D path, List<Vector2> points) =>
+            path.DrawEvenlySpacedPoints(points, Vector2.zero);
+        public static void DrawEvenlySpacedPoints(this Path2D path, Vector2 offset) =>
+            path.DrawEvenlySpacedPoints(path.EvenlySpacedPoints(), offset);
+        public static void DrawEvenlySpacedPoints(this Path2D path, IEnumerable<Vector2> points, Vector2 offset) {
+            foreach (var point in points) Handles.DrawSolidArc(point + offset, Vector3.forward, Vector3.up, 360, 2f);
         }
     }
 }

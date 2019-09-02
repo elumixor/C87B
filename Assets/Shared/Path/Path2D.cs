@@ -96,11 +96,13 @@ namespace Shared.Path {
 
             if (ReferenceEquals(b, null)) return false;
 
-            for (var i = 0; i < Length; i++) {
-                if (a[i] != b[i]) return false;
-            }
+            if (a.spacing != b.spacing || a.resolution != b.resolution) return false;
 
-            return false;
+            for (var i = 0; i < Length; i++)
+                if (a[i] != b[i])
+                    return false;
+
+            return true;
         }
 
         public static bool operator !=(Path2D a, Path2D b) {
